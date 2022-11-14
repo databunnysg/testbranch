@@ -1,19 +1,24 @@
 FreeNAS Cinder Driver
 =====================
 
-This repository contains driver scripts for FreeNAS/TrueNAS interaction with OpenStack Cinder for block storage manipulation.
+This repository contains driver scripts for FreeNAS interaction with OpenStack Cinder for block storage manipulation.
+
+WARNING
+==================
+
+This driver is not actively maintained by iXsystems and should be considered experimental. Use at your own risk!
 
 Requirements
 ============
 
-1. A FreeNAS/TrueNAS version >= 11.x <= 11.3U5 system with at least 8 Gb of memory and a minimum 20 GiB disk.   to use API v2.0
+1. A FreeNAS system with at least 8 Gb of memory and a minimum 20 GiB disk.  Suggested version >= 11.3 to use API v2.0
 2. Another system running either DevStack (Train or higher) or an OpenStack storage node.
 3. This driver is now upgraded to Python 3, so is usable by OpenStack versions from Train on.  
 
 Getting Started with Devstack
 =============================
 
-Download and install the FreeNAS/TrueNAS Cinder driver on the system running Devstack Newton:
+Download and install the FreeNAS Cinder driver on the system running Devstack Newton:
 
 ```
 % sudo -s
