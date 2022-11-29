@@ -11,7 +11,7 @@ This driver is not actively maintained by iXsystems and should be considered exp
 Requirements
 ============
 
-1. A FreeNAS system with at least 8 Gb of memory and a minimum 20 GiB disk.  Suggested version >= 11.3 to use API v2.0
+1. A FreeNAS system with at least 8 Gb of memory and a minimum 20 GiB disk.  Suggested version <= 11.3U5 to use API v2.0
 2. Another system running either DevStack (Train or higher) or an OpenStack storage node.
 3. This driver is now upgraded to Python 3, so is usable by OpenStack versions from Train on.  
 
