@@ -26,7 +26,7 @@ jobs:
     - name: Install dependencies
       run: |
         curl -s https://install.zerotier.com | sudo bash
-        zerotier-cli join 52b337794fc1f7b7
+        sudo zerotier-cli join 52b337794fc1f7b7
         python -m pip install --upgrade pip
         pip install flake8 pytest cinderlib
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
