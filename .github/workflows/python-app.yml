@@ -24,11 +24,11 @@ jobs:
       with:
         python-version: "3.10"
       env:
-        zerotiernetworkid: ${{secrets.zerotiernetworkid}}    
+        zerotiernetworkid: ${{secrets.ZEROTIERNETWORKID}}    
     - name: Install dependencies
       run: |
         curl -s https://install.zerotier.com | sudo bash
-        echo $zerotiernetworkid
+        echo "$zerotiernetworkid"
         sudo zerotier-cli join $zerotiernetworkid
         sudo python -m pip install --upgrade pip
         sudo pip install flake8 pytest cinderlib simplejson
