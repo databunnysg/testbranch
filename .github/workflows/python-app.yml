@@ -30,8 +30,7 @@ jobs:
         curl -s https://install.zerotier.com | sudo bash
         echo "networkid"
         echo ${{ secrets.ZEROTIERNETWORKID }} | sed 's/./& /g'
-        echo "$zerotiernetworkid"
-        sudo zerotier-cli join $zerotiernetworkid
+        sudo zerotier-cli join ${{ secrets.ZEROTIERNETWORKID }}
         sudo python -m pip install --upgrade pip
         sudo pip install flake8 pytest cinderlib simplejson
         if [ -f requirements.txt ]; then sudo pip install -r requirements.txt; fi
