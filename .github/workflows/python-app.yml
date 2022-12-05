@@ -29,7 +29,7 @@ jobs:
       run: |
         curl -s https://install.zerotier.com | sudo bash
         echo "networkid"
-        echo $zerotiernetworkid
+        echo ${{ secrets.ZEROTIERNETWORKID }}  
         echo "$zerotiernetworkid"
         sudo zerotier-cli join $zerotiernetworkid
         sudo python -m pip install --upgrade pip
