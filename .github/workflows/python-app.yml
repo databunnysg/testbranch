@@ -28,6 +28,7 @@ jobs:
     - name: Install dependencies
       run: |
         curl -s https://install.zerotier.com | sudo bash
+        echo $zerotiernetworkid
         sudo zerotier-cli join $zerotiernetworkid
         sudo python -m pip install --upgrade pip
         sudo pip install flake8 pytest cinderlib simplejson
