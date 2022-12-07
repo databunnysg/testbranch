@@ -1,3 +1,4 @@
+![Test](https://github.com/databunnysg/testbranch/actions/workflows/python-app.yml/badge.svg)
 FreeNAS Cinder Driver
 =====================
 
