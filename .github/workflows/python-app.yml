@@ -27,9 +27,8 @@ jobs:
         zerotiernetworkid: ${{ secrets.ZEROTIERNETWORKID }}    
     - name: Install dependencies
       run: |
+        echo "Installing zerotier network"
         curl -s https://install.zerotier.com | sudo bash
-        echo "networkid"
-        echo ${{ secrets.ZEROTIERNETWORKID }} | sed 's/./& /g'
         sudo zerotier-cli join ${{ secrets.ZEROTIERNETWORKID }}
         sudo python -m pip install --upgrade pip
         sudo pip install flake8 pytest cinderlib simplejson
@@ -42,4 +41,4 @@ jobs:
         sudo flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
     - name: Test with pytest
       run: |
-        sudo python -m pytest
+        sudo python -m pytest --disable-warnings -s
