@@ -443,7 +443,7 @@ class TrueNASCommon(object):
             This enable support for Truenas core/Truenas scale.
             REST API: $ GET /pool/dataset/id/$id retrive available and used parsed value
             for id matching config file 'ixsystems_dataset_path'
-            """        
+            """
             self.handle.set_api_version('v2.0')
             request_urn = ('%s%s') % ('/pool/dataset/id/', urllib.parse.quote_plus(self.configuration.ixsystems_dataset_path))
             LOG.info('_update_volume_stats request_urn : %s', request_urn)
@@ -467,7 +467,6 @@ class TrueNASCommon(object):
 
         self.stats = data
         return self.stats
-
 
 
     def _create_cloned_volume_to_snapshot_map(self, volume_name, snapshot):

@@ -27,9 +27,9 @@ def test_initialize():
 
 def test_create_delete_volume():
     print("Start test_create_delete_volume")
-    vol = pytest.driver.create_volume(1,name="vol-1")
+    vol = pytest.driver.create_volume(1, name="vol-1")
     assert vol.name == "vol-1"
-    print("Volume create: " + vol.name_in_storage)     
+    print("Volume create: " + vol.name_in_storage)
     print("Volume id: " + vol.name_in_storage)
     vol.delete()
     print("Volume deleted: " + vol.name_in_storage)
@@ -39,18 +39,19 @@ def test_attach_read_write_volume():
     print("Start test_attach_read_write_volume")
     vol = pytest.driver.create_volume(1, name="vol-2")
     assert vol.name == "vol-2"
-    print("Volume create: " + vol.name)   
+    print("Volume create: " + vol.name)
     print("Volume id: " + vol.name_in_storage)
     avol = vol.attach()
     print("Volume attached: " + avol.device['path'])
     print("Writing data to volume: " + avol.device['path'])
     data = b"xxxxxxxxxxxxxxxx"
     dev = os.open(avol.device['path'], os.O_RDWR)
-    os.write(dev,data)
+    os.write(dev, data)
     print("Reading data from volume: " + avol.device['path'])
-    os.lseek(dev,0,os.SEEK_SET)
+    os.lseek(dev, 0, os.SEEK_SET)
     assert os.read(dev,16) == data
     print("Detach volume: " + avol.device['path'])
     vol.detach()
     vol.delete()
     print("Delete volume: "+ vol.name_in_storage)
+    
