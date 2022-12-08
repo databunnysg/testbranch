@@ -49,9 +49,9 @@ def test_attach_read_write_volume():
     os.write(dev, data)
     print("Reading data from volume: " + avol.device['path'])
     os.lseek(dev, 0, os.SEEK_SET)
-    assert os.read(dev,16) == data
+    assert os.read(dev, 16) == data
     print("Detach volume: " + avol.device['path'])
     vol.detach()
     vol.delete()
-    print("Delete volume: "+ vol.name_in_storage)
-    
+    print("Delete volume: " + vol.name_in_storage)
+

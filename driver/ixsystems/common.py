@@ -468,7 +468,6 @@ class TrueNASCommon(object):
         self.stats = data
         return self.stats
 
-
     def _create_cloned_volume_to_snapshot_map(self, volume_name, snapshot):
         """maintain a mapping between cloned volume and tempary snapshot."""
         map_file = os.path.join(CONF.volumes_dir, volume_name)
