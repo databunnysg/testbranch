@@ -410,38 +410,41 @@ class TrueNASCommon(object):
             raise FreeNASApiError('Unexpected error', e)
 
     def _system_version(self):
-            LOG.debug('_update_volume_stats start /system/version request')
-            # Use API v2.0 /system/version to detect nasversion
-            # API v2.0 /system/version available for FreeNAS 11.x TrueNAS 12.x TrueNAS 13.x TrueNAS Scale 22.x
-            request_urn = ("/system/version")
-            self.handle.set_api_version('v2.0')
-            # For legacy verion that does not support API v2.0 /system/version return fallback value "VersionNotFound"
-            versionresult="VersionNotFound"
-            try:
-                versionret = self.handle.invoke_command(FreeNASServer.SELECT_COMMAND,
-                                                request_urn, None)
-                LOG.debug('_update_volume_stats start /system/version response: %s',versionret)
-                versionresult = json.loads(versionret['response'])
-                LOG.debug('_update_volume_stats /system/version response : %s', versionresult)
-            except Exception as e:
-                raise FreeNASApiError('Unexpected error', e)
-            finally:
-                return str(versionresult)
-            
+        LOG.debug('_update_volume_stats start /system/version request')
+        # Use API v2.0 /system/version to detect nasversion
+        # API v2.0 /system/version available for FreeNAS 11.x TrueNAS 12.x TrueNAS 13.x TrueNAS Scale 22.x
+        request_urn = ("/system/version")
+        self.handle.set_api_version('v2.0')
+        # For legacy verion that does not support API v2.0 /system/version return fallback value "VersionNotFound"
+        versionresult = "VersionNotFound"
+        try:
+            versionret = self.handle.invoke_command(FreeNASServer.SELECT_COMMAND,
+                            request_urn, None)
+            LOG.debug('_update_volume_stats start /system/version response: %s', versionret)
+            versionresult = json.loads(versionret['response'])
+            LOG.debug('_update_volume_stats /system/version response : %s', versionresult)
+        except Exception as e:
+            raise FreeNASApiError('Unexpected error', e)
+        finally:
+            return str(versionresult)
+
     def _update_volume_stats(self):
         data = {}
         nasversion = self._system_version()
         # Implementation for TrueNAS 12.0 upwards on API V2.0
         # If user are connecting to FreeNAS report error
-        if nasversion.find("FreeNAS")>=0 or nasversion=="VersionNotFound" :
+        if nasversion.find("FreeNAS") >= 0 or nasversion == "VersionNotFound":
             LOG.error("FreeNAS is no longer support by this version of cinder driver.")
-            raise FreeNASApiError('Version not supported','FreeNAS is no longer support by this version of cinder driver.')
+            raise FreeNASApiError('Version not supported', 'FreeNAS is no longer support by this version of cinder driver.')
         else:
-            """Retrieve dataset available and used using API 2.0 /pool/dataset/id/$id instead of API 1.0. This enable support for Truenas core/Truenas scale.
-            REST API: $ GET /pool/dataset/id/$id retrive available and used parsed value for id matching config file 'ixsystems_dataset_path'
+            """Retrieve dataset available and used using API 2.0 
+            /pool/dataset/id/$id instead of API 1.0. 
+            This enable support for Truenas core/Truenas scale.
+            REST API: $ GET /pool/dataset/id/$id retrive available and used parsed value 
+            for id matching config file 'ixsystems_dataset_path'
             """        
             self.handle.set_api_version('v2.0')
-            request_urn = ('%s%s') % ('/pool/dataset/id/',urllib.parse.quote_plus(self.configuration.ixsystems_dataset_path))
+            request_urn = ('%s%s') % ('/pool/dataset/id/', urllib.parse.quote_plus(self.configuration.ixsystems_dataset_path))
             LOG.info('_update_volume_stats request_urn : %s', request_urn)
             ret = self.handle.invoke_command(FreeNASServer.SELECT_COMMAND,
                                             request_urn, None)
