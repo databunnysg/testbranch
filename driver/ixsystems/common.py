@@ -418,8 +418,9 @@ class TrueNASCommon(object):
         # For legacy verion that does not support API v2.0 /system/version return fallback value "VersionNotFound"
         versionresult = "VersionNotFound"
         try:
-            versionret = self.handle.invoke_command(FreeNASServer.SELECT_COMMAND,
-                            request_urn, None)
+            versionret = self.handle.invoke_command(
+                FreeNASServer.SELECT_COMMAND,
+                request_urn, None)
             LOG.debug('_update_volume_stats start /system/version response: %s', versionret)
             versionresult = json.loads(versionret['response'])
             LOG.debug('_update_volume_stats /system/version response : %s', versionresult)
@@ -437,21 +438,20 @@ class TrueNASCommon(object):
             LOG.error("FreeNAS is no longer support by this version of cinder driver.")
             raise FreeNASApiError('Version not supported', 'FreeNAS is no longer support by this version of cinder driver.')
         else:
-            """Retrieve dataset available and used using API 2.0 
-            /pool/dataset/id/$id instead of API 1.0. 
+            """Retrieve dataset available and used using API 2.0
+            /pool/dataset/id/$id instead of API 1.0.
             This enable support for Truenas core/Truenas scale.
-            REST API: $ GET /pool/dataset/id/$id retrive available and used parsed value 
+            REST API: $ GET /pool/dataset/id/$id retrive available and used parsed value
             for id matching config file 'ixsystems_dataset_path'
             """        
             self.handle.set_api_version('v2.0')
             request_urn = ('%s%s') % ('/pool/dataset/id/', urllib.parse.quote_plus(self.configuration.ixsystems_dataset_path))
             LOG.info('_update_volume_stats request_urn : %s', request_urn)
-            ret = self.handle.invoke_command(FreeNASServer.SELECT_COMMAND,
-                                            request_urn, None)
+            ret = self.handle.invoke_command(FreeNASServer.SELECT_COMMAND, request_urn, None)
             LOG.info("_update_volume_stats response : %s", json.dumps(ret))
             retresult = json.loads(ret['response'])
             avail = retresult['available']['parsed']
-            used = retresult['used']['parsed']     
+            used = retresult['used']['parsed']
             LOG.info('_update_volume_stats avail : %s', avail)
             LOG.info('_update_volume_stats used : %s', used)
             data["volume_backend_name"] = self.backend_name
