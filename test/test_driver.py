@@ -54,4 +54,3 @@ def test_attach_read_write_volume():
     vol.detach()
     vol.delete()
     print("Delete volume: " + vol.name_in_storage)
-
