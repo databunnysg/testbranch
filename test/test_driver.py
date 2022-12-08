@@ -27,7 +27,7 @@ def test_create_delete_volume():
     print("Volume create: "+ vol.name_in_storage)     
     print("Volume id: "+ vol.name_in_storage)
     vol.delete()
-    print("Volume deleted: "+ vol.name_in_storage)     
+    print("Volume deleted: "+ vol.name_in_storage)    
 def test_attach_read_write_volume():   
     print("Start test_attach_read_write_volume")          
     vol = driver.create_volume(1,name="vol-2")
