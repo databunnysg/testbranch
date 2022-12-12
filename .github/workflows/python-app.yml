@@ -40,7 +40,7 @@ jobs:
         sudo flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
     - name: Test with pytest --configfile ./test/truenas12.cfg
       run: |
-        python -m pytest --disable-warnings -s --configfile ./test/truenas12.cfg
+        sudo python -m pytest --disable-warnings -s --configfile ./test/truenas12.cfg
     - name: Test with pytest --configfile ./test/truenas22.cfg
       run: |        
-        python -m pytest --disable-warnings -s --configfile ./test/truenas22.cfg
+        sudo python -m pytest --disable-warnings -s --configfile ./test/truenas22.cfg
