@@ -1,12 +1,12 @@
 import pytest
-import cinderlib as cl
+import cinderlib
 import sys
 import os
 import importlib
 import configparser
 
-
-def test_initialize():
+@pytest.fixture()
+def cinderdriver(configfile):
     print("Load driver module")
     MODULE_PATH = os.path.abspath("./driver/ixsystems/__init__.py")
     MODULE_NAME = "cinder.volume.drivers.ixsystems"
@@ -14,20 +14,21 @@ def test_initialize():
     module = importlib.util.module_from_spec(spec)
     sys.modules[spec.name] = module
     spec.loader.exec_module(module)
-    print("Load config: ./test/truenas22.cfg")
+    print("Load config: " + configfile)
     config = configparser.ConfigParser()
-    config.read("./test/truenas22.cfg")
+    config.read(configfile)
     configdict = dict(config.items('ixsystems-iscsi'))
     print(config.items('ixsystems-iscsi'))
 
     # Initialize the ixsystem-iscsi driver
     print("Load driver")
-    pytest.driver = cl.Backend(volume_backend_name='ixsystems-iscsi', **configdict)
+    driver = cinderlib.Backend(volume_backend_name='ixsystems-iscsi', **configdict)
+    return driver
 
 
-def test_create_delete_volume():
+def test_create_delete_volume(cinderdriver):
     print("Start test_create_delete_volume")
-    vol = pytest.driver.create_volume(1, name="vol-1")
+    vol = cinderdriver.create_volume(1, name="vol-1")
     assert vol.name == "vol-1"
     print("Volume create: " + vol.name_in_storage)
     print("Volume id: " + vol.name_in_storage)
@@ -35,9 +36,9 @@ def test_create_delete_volume():
     print("Volume deleted: " + vol.name_in_storage)
 
 
-def test_attach_read_write_volume():
+def test_attach_read_write_volume(cinderdriver):
     print("Start test_attach_read_write_volume")
-    vol = pytest.driver.create_volume(1, name="vol-2")
+    vol = cinderdriver.create_volume(1, name="vol-2")
     assert vol.name == "vol-2"
     print("Volume create: " + vol.name)
     print("Volume id: " + vol.name_in_storage)
@@ -54,3 +55,16 @@ def test_attach_read_write_volume():
     vol.detach()
     vol.delete()
     print("Delete volume: " + vol.name_in_storage)
+
+def test_attach_multiple_volumes(cinderdriver):
+    return
+    print("Start test_attach_multiple_volumes")
+    for i in range(0,7):
+        vol = pytest.driver.create_volume(1, name="vol-" + str(i))
+        print("Volume create: " + vol.name)
+        print("Volume id: " + vol.name_in_storage)
+    pytest.driver.volumes[0].attach()
+    pytest.driver.volumes[1].attach()
+    pytest.driver.volumes[2].attach()
+    pytest.driver.volumes[3].attach()
+    pytest.driver.volumes[4].attach()
