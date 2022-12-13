@@ -5,6 +5,7 @@ import os
 import importlib
 import configparser
 
+
 @pytest.fixture()
 def cinderdriver(configfile):
     print("Load driver module")
@@ -25,6 +26,7 @@ def cinderdriver(configfile):
     driver = cinderlib.Backend(volume_backend_name='ixsystems-iscsi', **configdict)
     return driver
 
+
 def test_create_delete_volume(cinderdriver):
     print("Start test_create_delete_volume")
     vol = cinderdriver.create_volume(1, name="vol-1")
@@ -33,6 +35,7 @@ def test_create_delete_volume(cinderdriver):
     print("Volume id: " + vol.name_in_storage)
     vol.delete()
     print("Volume deleted: " + vol.name_in_storage)
+
 
 def test_attach_read_write_volume(cinderdriver):
     print("Start test_attach_read_write_volume")
@@ -53,6 +56,7 @@ def test_attach_read_write_volume(cinderdriver):
     vol.detach()
     vol.delete()
     print("Delete volume: " + vol.name_in_storage)
+
 
 def test_attach_multiple_volumes(cinderdriver):
     print("Start test_attach_multiple_volumes")
