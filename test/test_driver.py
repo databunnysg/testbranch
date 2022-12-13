@@ -56,7 +56,7 @@ def test_attach_read_write_volume(cinderdriver):
 
 def test_attach_multiple_volumes(cinderdriver):
     print("Start test_attach_multiple_volumes")
-    for i in range(0,1):
+    for i in range(0,2):
         vol = cinderdriver.create_volume(1, name="vol-" + str(i))
         print("Volume create: " + vol.name)
         print("Volume id: " + vol.name_in_storage)
@@ -66,3 +66,4 @@ def test_attach_multiple_volumes(cinderdriver):
     cinderdriver.volumes[1].detach()
     cinderdriver.volumes[0].delete()
     cinderdriver.volumes[1].delete()
+    print("Volume deleted: " + cinderdriver.volumes[0] + " " + cinderdriver.volumes[1])
