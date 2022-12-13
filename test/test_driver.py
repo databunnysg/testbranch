@@ -25,7 +25,6 @@ def cinderdriver(configfile):
     driver = cinderlib.Backend(volume_backend_name='ixsystems-iscsi', **configdict)
     return driver
 
-
 def test_create_delete_volume(cinderdriver):
     print("Start test_create_delete_volume")
     vol = cinderdriver.create_volume(1, name="vol-1")
@@ -34,7 +33,6 @@ def test_create_delete_volume(cinderdriver):
     print("Volume id: " + vol.name_in_storage)
     vol.delete()
     print("Volume deleted: " + vol.name_in_storage)
-
 
 def test_attach_read_write_volume(cinderdriver):
     print("Start test_attach_read_write_volume")
@@ -57,14 +55,14 @@ def test_attach_read_write_volume(cinderdriver):
     print("Delete volume: " + vol.name_in_storage)
 
 def test_attach_multiple_volumes(cinderdriver):
-    return
     print("Start test_attach_multiple_volumes")
-    for i in range(0,7):
-        vol = pytest.driver.create_volume(1, name="vol-" + str(i))
+    for i in range(0,1):
+        vol = cinderdriver.create_volume(1, name="vol-" + str(i))
         print("Volume create: " + vol.name)
         print("Volume id: " + vol.name_in_storage)
-    pytest.driver.volumes[0].attach()
-    pytest.driver.volumes[1].attach()
-    pytest.driver.volumes[2].attach()
-    pytest.driver.volumes[3].attach()
-    pytest.driver.volumes[4].attach()
+    cinderdriver.volumes[0].attach()
+    cinderdriver.volumes[1].attach()
+    cinderdriver.volumes[0].detach()
+    cinderdriver.volumes[1].detach()
+    cinderdriver.volumes[0].delete()
+    cinderdriver.volumes[1].delete()
