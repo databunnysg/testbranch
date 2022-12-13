@@ -69,5 +69,6 @@ def test_attach_multiple_volumes(cinderdriver):
     cinderdriver.volumes[0].detach()
     cinderdriver.volumes[1].detach()
     cinderdriver.volumes[0].delete()
-    cinderdriver.volumes[1].delete()
-    print("Volume deleted: " + cinderdriver.volumes[0] + " " + cinderdriver.volumes[1])
+    print("Volume deleted: " + cinderdriver.volumes[0])
+    cinderdriver.volumes[0].delete()
+    print("Volume deleted: " + cinderdriver.volumes[0])    
