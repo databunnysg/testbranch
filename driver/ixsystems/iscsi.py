@@ -169,7 +169,7 @@ class FreeNASISCSIDriver(driver.ISCSIDriver):
             ctx.__setattr__("read_deleted", "no")
             ctx.__setattr__("project_only", "True")
             vols = cinderapi.volume_get_all(ctx)
-            attached_truenas_vol_count = len([vol for vol in vols 
+            attached_truenas_vol_count = len([vol for vol in vols
                                               if vol.host.find("@ixsystems-iscsi#") > 0 and vol.attach_status == 'attached'])
             if (attached_truenas_vol_count >= lunallowed):
                 LOG.error("Maximum lun/port limitation reached. Change kern.cam.ctl.max_luns and "
@@ -179,12 +179,13 @@ class FreeNASISCSIDriver(driver.ISCSIDriver):
 
     def initialize_connection(self, volume, connector):
         """Check connection before return connection to upstream cinder manager"""
-        if self.check_connection() == False :
-            exception = FreeNASApiError('Maximum lun/port limitation reached. Change kern.cam.ctl.max_luns and kern.cam.ctl.max_ports in tunable settings to allow more lun attachments.')
+        if self.check_connection() is False :
+            exception = FreeNASApiError('Maximum lun/port limitation reached. Change kern.cam.ctl.max_luns and '
+                                        + 'kern.cam.ctl.max_ports in tunable settings to allow more lun attachments.')
             message_api = api.API()
             ctx = context.get_admin_context()
             ctx.project_id = volume.project_id
-            message_api.create(ctx,action = Action.ATTACH_VOLUME, resource_uuid = volume.id,
+            message_api.create(ctx, action = Action.ATTACH_VOLUME, resource_uuid = volume.id,
                                exception = exception, detail = Detail.ATTACH_ERROR)
             raise exception
         """Driver entry point to attach a volume to an instance."""
