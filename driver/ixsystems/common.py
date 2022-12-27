@@ -429,7 +429,6 @@ class TrueNASCommon(object):
         finally:
             return str(versionresult)
 
-
     def _tunable(self):
         LOG.debug('_tunable /tunable request')
         request_urn = ("/tunable")
@@ -466,9 +465,7 @@ class TrueNASCommon(object):
             """
             self.handle.set_api_version('v2.0')
             request_urn = ('%s%s') % ('/pool/dataset/id/', urllib.parse.quote_plus(self.configuration.ixsystems_dataset_path))
-            #LOG.debug('_update_volume_stats request_urn : %s', request_urn)
             ret = self.handle.invoke_command(FreeNASServer.SELECT_COMMAND, request_urn, None)
-            #LOG.debug("_update_volume_stats response : %s", json.dumps(ret))
             retresult = json.loads(ret['response'])
             avail = retresult['available']['parsed']
             used = retresult['used']['parsed']
