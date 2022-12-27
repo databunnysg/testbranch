@@ -178,7 +178,7 @@ class FreeNASISCSIDriver(driver.ISCSIDriver):
         return True
 
     def initialize_connection(self, volume, connector):
-        """Check connection before return connection to upstream cinder manager"""
+        """Do connection validation for know faiture before return connection to upstream cinder manager"""
         if self.check_connection() is False:
             exception = FreeNASApiError('Maximum lun/port limitation reached. Change kern.cam.ctl.max_luns and '
                                         + 'kern.cam.ctl.max_ports in tunable settings to allow more lun attachments.')
