@@ -163,18 +163,17 @@ class FreeNASISCSIDriver(driver.ISCSIDriver):
         LOG.debug("Tunable OS max_luns/ports: %s" % lunallowed)
 
         # check cinder driver already loaded before executing upstream code
-        if(len(cinderapi.CONF.list_all_sections()) > 0):
+        if (len(cinderapi.CONF.list_all_sections()) > 0):
             ctx = context.RequestContext()
             ctx = context.get_admin_context()
             ctx.__setattr__("read_deleted", "no")
             ctx.__setattr__("project_only", "True")
             vols = cinderapi.volume_get_all(ctx)
-            attached_truenas_vol_count = len([vol for vol in vols if vol.host.find("@ixsystems-iscsi#") > 0 and vol.attach_status == 'attached'])
-            if(attached_truenas_vol_count >= lunallowed):
-                LOG.error("Maximum lun/port limitation reached, attached volumes %s, "
-                          + "truenas os maximum allows %s. Change kern.cam.ctl.max_luns and "
-                          + "kern.cam.ctl.max_ports in tunable settings to allow more lun attachments."
-                          % (attached_truenas_vol_count, lunallowed))
+            attached_truenas_vol_count = len([vol for vol in vols 
+                                              if vol.host.find("@ixsystems-iscsi#") > 0 and vol.attach_status == 'attached'])
+            if (attached_truenas_vol_count >= lunallowed):
+                LOG.error("Maximum lun/port limitation reached. Change kern.cam.ctl.max_luns and "
+                          + "kern.cam.ctl.max_ports in tunable settings to allow more lun attachments.")
                 return False
         return True
 
@@ -185,8 +184,8 @@ class FreeNASISCSIDriver(driver.ISCSIDriver):
             message_api = api.API()
             ctx = context.get_admin_context()
             ctx.project_id = volume.project_id
-            message_api.create(ctx,action= Action.ATTACH_VOLUME, resource_uuid = volume.id,
-                               exception = exception,detail=Detail.ATTACH_ERROR)
+            message_api.create(ctx,action = Action.ATTACH_VOLUME, resource_uuid = volume.id,
+                               exception = exception, detail = Detail.ATTACH_ERROR)
             raise exception
         """Driver entry point to attach a volume to an instance."""
         LOG.info('iXsystems Initialise Connection')
