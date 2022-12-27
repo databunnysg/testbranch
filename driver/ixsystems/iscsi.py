@@ -150,15 +150,15 @@ class FreeNASISCSIDriver(driver.ISCSIDriver):
         LOG.debug("Tanable: %s" % str(self.common._tunable()))
         tunable = self.common._tunable()
         # default value from Truenas 12 kern.cam.ctl.max_ports 256, kern.cam.ctl.max_luns 1024
-        lunallowed = 256 
+        lunallowed = 256
         for item in tunable:
             if (item.get('enabled') and
-                item.get('var') == 'kern.cam.ctl.max_luns' and
-                str(item.get('value')).isnumeric()):
+                    item.get('var') == 'kern.cam.ctl.max_luns' and
+                    str(item.get('value')).isnumeric()):
                 lunallowed = min(lunallowed, int(item['value']))
             if (item.get('enabled') and
-                item.get('var') == 'kern.cam.ctl.max_ports' and
-                str(item.get('value')).isnumeric()):
+                    item.get('var') == 'kern.cam.ctl.max_ports' and
+                    str(item.get('value')).isnumeric()):
                 lunallowed = min(lunallowed, int(item['value']))
         LOG.debug("Tunable OS max_luns/ports: %s" % lunallowed)
 
@@ -171,7 +171,9 @@ class FreeNASISCSIDriver(driver.ISCSIDriver):
             vols = cinderapi.volume_get_all(ctx)
             attached_truenas_vol_count = len([vol for vol in vols if vol.host.find("@ixsystems-iscsi#") > 0 and vol.attach_status == 'attached'])
             if(attached_truenas_vol_count >= lunallowed):
-                LOG.error("Maximum lun/port limitation reached, attached volumes %s, truenas os maximum allows %s. Change kern.cam.ctl.max_luns and kern.cam.ctl.max_ports in tunable settings to allow more lun attachments."
+                LOG.error("Maximum lun/port limitation reached, attached volumes %s, "
+                          + "truenas os maximum allows %s. Change kern.cam.ctl.max_luns and "
+                          + "kern.cam.ctl.max_ports in tunable settings to allow more lun attachments."
                           % (attached_truenas_vol_count, lunallowed))
                 return False
         return True
@@ -181,7 +183,6 @@ class FreeNASISCSIDriver(driver.ISCSIDriver):
         if self.check_connection() == False :
             exception = FreeNASApiError('Maximum lun/port limitation reached. Change kern.cam.ctl.max_luns and kern.cam.ctl.max_ports in tunable settings to allow more lun attachments.')
             message_api = api.API()
-            print("volumeid:%s" % volume.id)
             ctx = context.get_admin_context()
             ctx.project_id = volume.project_id
             message_api.create(ctx,action= Action.ATTACH_VOLUME, resource_uuid = volume.id,
