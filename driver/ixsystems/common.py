@@ -429,14 +429,34 @@ class TrueNASCommon(object):
         finally:
             return str(versionresult)
 
+
+    def _tunable(self):
+        LOG.debug('_tunable /tunable request')
+        request_urn = ("/tunable")
+        self.handle.set_api_version('v2.0')
+        tunableresult = []
+        try:
+            tunableret = self.handle.invoke_command(
+                FreeNASServer.SELECT_COMMAND,
+                request_urn, None)
+            tunableresult = json.loads(tunableret['response'])
+            LOG.debug('Tunable response : %s', tunableresult)
+        except Exception as e:
+            raise FreeNASApiError('Unexpected error', e)
+        finally:
+            return tunableresult
+
     def _update_volume_stats(self):
         data = {}
         nasversion = self._system_version()
         # Implementation for TrueNAS 12.0 upwards on API V2.0
         # If user are connecting to FreeNAS report error
-        if nasversion.find("FreeNAS") >= 0 or nasversion == "VersionNotFound":
+        if nasversion.find("FreeNAS") >= 0:
             LOG.error("FreeNAS is no longer support by this version of cinder driver.")
             raise FreeNASApiError('Version not supported', 'FreeNAS is no longer support by this version of cinder driver.')
+        elif nasversion == "VersionNotFound":
+            LOG.error("TrueNAS not found")
+            raise FreeNASApiError('TrueNAS not found')
         else:
             """Retrieve dataset available and used using API 2.0
             /pool/dataset/id/$id instead of API 1.0.
@@ -446,9 +466,9 @@ class TrueNASCommon(object):
             """
             self.handle.set_api_version('v2.0')
             request_urn = ('%s%s') % ('/pool/dataset/id/', urllib.parse.quote_plus(self.configuration.ixsystems_dataset_path))
-            LOG.info('_update_volume_stats request_urn : %s', request_urn)
+            #LOG.debug('_update_volume_stats request_urn : %s', request_urn)
             ret = self.handle.invoke_command(FreeNASServer.SELECT_COMMAND, request_urn, None)
-            LOG.info("_update_volume_stats response : %s", json.dumps(ret))
+            #LOG.debug("_update_volume_stats response : %s", json.dumps(ret))
             retresult = json.loads(ret['response'])
             avail = retresult['available']['parsed']
             used = retresult['used']['parsed']
