@@ -147,8 +147,8 @@ class FreeNASISCSIDriver(driver.ISCSIDriver):
         pass
 
     def check_connection(self):
-        # connection safety check for #27 
-        if ix_utils.parse_truenas_version(self.common._version())[1] in ('12.0', '13.0'):
+        # connection safety check for #27
+        if ix_utils.parse_truenas_version(self.common._system_version())[1] in ('12.0', '13.0'):
             LOG.debug("Tanable: %s" % str(self.common._tunable()))
             tunable = self.common._tunable()
             # default value from Truenas 12 kern.cam.ctl.max_ports 256, kern.cam.ctl.max_luns 1024
@@ -181,7 +181,6 @@ class FreeNASISCSIDriver(driver.ISCSIDriver):
 
     def initialize_connection(self, volume, connector):
         """Do connection validation for know faiture before return connection to upstream cinder manager"""
-        
         if self.check_connection() is False:
             exception = FreeNASApiError('Maximum lun/port limitation reached. Change kern.cam.ctl.max_luns and '
                                         + 'kern.cam.ctl.max_ports in tunable settings to allow more lun attachments.')
