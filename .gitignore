@@ -1,3 +1,7 @@
 os-brick-*
 *.pyc
 .gitingore
+settings.json
+*.img
+devstackvm.json
+/ci/*
