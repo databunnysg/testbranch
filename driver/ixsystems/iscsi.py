@@ -166,7 +166,6 @@ class FreeNASISCSIDriver(driver.ISCSIDriver):
 
         # check cinder driver already loaded before executing upstream code
         if (len(cinderapi.CONF.list_all_sections()) > 0):
-            ctx = context.RequestContext()
             ctx = context.get_admin_context()
             ctx.__setattr__("read_deleted", "no")
             ctx.__setattr__("project_only", "True")
