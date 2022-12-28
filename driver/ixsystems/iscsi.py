@@ -160,11 +160,10 @@ class FreeNASISCSIDriver(driver.ISCSIDriver):
                     item.get('var') == 'kern.cam.ctl.max_ports' and
                     str(item.get('value')).isnumeric()):
                 lunallowed = min(lunallowed, int(item['value']))
-        LOG.debug("Tunable OS max_luns/ports: %s" % lunallowed)
+        LOG.debug("Tunable OS max_luns/max_ports: %s" % lunallowed)
 
         # check cinder driver already loaded before executing upstream code
         if (len(cinderapi.CONF.list_all_sections()) > 0):
-            ctx = context.RequestContext()
             ctx = context.get_admin_context()
             ctx.__setattr__("read_deleted", "no")
             ctx.__setattr__("project_only", "True")
