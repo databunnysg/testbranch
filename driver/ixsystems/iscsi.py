@@ -46,8 +46,6 @@ CONF.register_opts(ixsystems_apikeyauth_opts)
 CONF.register_opts(ixsystems_provisioning_opts)
 
 
-
-
 class FreeNASISCSIDriver(driver.ISCSIDriver):
     """FREENAS iSCSI volume driver."""
 
@@ -67,7 +65,7 @@ class FreeNASISCSIDriver(driver.ISCSIDriver):
         super(FreeNASISCSIDriver, self).__init__(*args, **kwargs)
         self.configuration.append_config_values(ixsystems_connection_opts)
         self.configuration.append_config_values(ixsystems_basicauth_opts)
-        self.configuration.append_config_values(ixsystems_apikeyauth_opts)        
+        self.configuration.append_config_values(ixsystems_apikeyauth_opts)
         self.configuration.append_config_values(ixsystems_transport_opts)
         self.configuration.append_config_values(ixsystems_provisioning_opts)
         self.configuration.ixsystems_iqn_prefix += ':'
@@ -158,7 +156,7 @@ class FreeNASISCSIDriver(driver.ISCSIDriver):
             # Default value from Truenas 12 kern.cam.ctl.max_ports 256, kern.cam.ctl.max_luns 1024
             # common._tunable() returns a list of dict [{'var':'kern.cam.ctl.max_luns','enabled':True,'value':'256'}
             # ,{'var':'kern.cam.ctl.max_ports','enabled':True,'value':'1024'}]
-            # Retrive attach_max_allow from min value of common._tunable() 
+            # Retrive attach_max_allow from min value of common._tunable()
             # kern.cam.ctl.max_luns and kern.cam.ctl.max_ports
             max_ports, max_luns = 256, 1024
             for item in tunable:

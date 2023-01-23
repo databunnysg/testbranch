@@ -69,7 +69,7 @@ class FreeNASServer(object):
         self._port = port
         self._username = username
         self._password = password
-        self._apikey= apikey
+        self._apikey = apikey
         self.set_api_version(api_version)
         self.set_transport_type(transport_type)
 
@@ -103,9 +103,6 @@ class FreeNASServer(object):
     def set_password(self, password):
         self._password = password
 
-    def set_apikey(self, apikey):
-        self._apikey = apikey
-        
     def set_api_version(self, api_version):
         self._api_version = api_version
 
@@ -126,7 +123,7 @@ class FreeNASServer(object):
         headers = {'Content-Type': 'application/json'}
 
         if self._apikey != '':
-            headers['Authorization'] = ("Bearer %s"%self._apikey)
+            headers['Authorization'] = ("Bearer %s" % self._apikey)
         elif self._username != '' and self._password != '':
             loginstring = ("%s:%s" % (self._username, self._password))
             bloginstring = bytes(loginstring, encoding='utf8')
@@ -201,7 +198,7 @@ class FreeNASServer(object):
             raise FreeNASApiError("Invalid FREENAS command")
         request.get_method = lambda: method
         try:
-            response_d = urllib.request.urlopen(request, context = ssl.SSLContext())
+            response_d = urllib.request.urlopen(request, context=ssl.SSLContext())
             response = self._parse_result(command_d, response_d)
             LOG.debug("invoke_command : response for request %s : %s",
                       request_d, json.dumps(response))
