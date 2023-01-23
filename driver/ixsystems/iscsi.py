@@ -23,6 +23,7 @@ import simplejson as json
 from cinder.volume import driver
 from cinder.volume.drivers.ixsystems import common
 from cinder.volume.drivers.ixsystems.options import ixsystems_basicauth_opts
+from cinder.volume.drivers.ixsystems.options import ixsystems_apikeyauth_opts
 from cinder.volume.drivers.ixsystems.options import ixsystems_connection_opts
 from cinder.volume.drivers.ixsystems.options import ixsystems_provisioning_opts
 from cinder.volume.drivers.ixsystems.options import ixsystems_transport_opts
@@ -41,7 +42,10 @@ CONF = cfg.CONF
 CONF.register_opts(ixsystems_connection_opts)
 CONF.register_opts(ixsystems_transport_opts)
 CONF.register_opts(ixsystems_basicauth_opts)
+CONF.register_opts(ixsystems_apikeyauth_opts)
 CONF.register_opts(ixsystems_provisioning_opts)
+
+
 
 
 class FreeNASISCSIDriver(driver.ISCSIDriver):
@@ -50,12 +54,11 @@ class FreeNASISCSIDriver(driver.ISCSIDriver):
     VERSION = "2.0.0"
     IGROUP_PREFIX = 'openstack-'
 
-    required_flags = ['ixsystems_transport_type', 'ixsystems_login',
-                      'ixsystems_password', 'ixsystems_server_hostname',
+    required_flags = ['ixsystems_transport_type', 'ixsystems_server_hostname',
                       'ixsystems_server_port', 'ixsystems_server_iscsi_port',
                       'ixsystems_volume_backend_name', 'ixsystems_vendor_name',
                       'ixsystems_storage_protocol', 'ixsystems_datastore_pool',
-                      'ixsystems_dataset_path', 'ixsystems_iqn_prefix', ]
+                      'ixsystems_dataset_path', 'ixsystems_iqn_prefix',]
 
     def __init__(self, *args, **kwargs):
         """Initialize FreeNASISCSIDriver Class."""
@@ -64,6 +67,7 @@ class FreeNASISCSIDriver(driver.ISCSIDriver):
         super(FreeNASISCSIDriver, self).__init__(*args, **kwargs)
         self.configuration.append_config_values(ixsystems_connection_opts)
         self.configuration.append_config_values(ixsystems_basicauth_opts)
+        self.configuration.append_config_values(ixsystems_apikeyauth_opts)        
         self.configuration.append_config_values(ixsystems_transport_opts)
         self.configuration.append_config_values(ixsystems_provisioning_opts)
         self.configuration.ixsystems_iqn_prefix += ':'
@@ -149,7 +153,7 @@ class FreeNASISCSIDriver(driver.ISCSIDriver):
     def check_connection(self):
         # connection safety check for #27
         if ix_utils.parse_truenas_version(self.common._system_version())[1] in ('12.0', '13.0'):
-            LOG.debug("Tanable: %s", str(self.common._tunable()))
+            LOG.debug("Tunable: %s", str(self.common._tunable()))
             tunable = self.common._tunable()
             # Default value from Truenas 12 kern.cam.ctl.max_ports 256, kern.cam.ctl.max_luns 1024
             # common._tunable() returns a list of dict [{'var':'kern.cam.ctl.max_luns','enabled':True,'value':'256'}
