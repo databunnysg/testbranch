@@ -45,7 +45,7 @@ class TrueNASCommon(object):
         self.backend_name = self.configuration.ixsystems_volume_backend_name
         self.vendor_name = self.configuration.ixsystems_vendor_name
         self.storage_protocol = self.configuration.ixsystems_storage_protocol
-        self.apikey = self.configuration.ixsystems_apikey        
+        self.apikey = self.configuration.ixsystems_apikey
         self.stats = {}
 
     def _create_handle(self, **kwargs):
