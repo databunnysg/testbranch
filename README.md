@@ -68,6 +68,7 @@ Here is an example configuration:
  ixsystems_login = root
  ixsystems_password = thisisdummypassword
  ixsystems_server_hostname = 100.1.2.34
+ ixsystems_transport_type = https
  ixsystems_volume_backend_name = iXsystems_TRUENAS_Storage
  ixsystems_iqn_prefix = iqn.2005-10.org.freenas.ctl
  ixsystems_datastore_pool = tank
