@@ -392,12 +392,13 @@ class TrueNASCommon(object):
                 print("volumeisbusy exeception raised")
                 errorexception = exception.VolumeIsBusy(
                     _("Cannot delete volume when clone child volume or snapshot exists!"), volume_name=name)
-                raise errorexception            
+                raise errorexception
             elif ret['status'] != FreeNASServer.STATUS_OK:
                 msg = ('Error while deleting snapshot: %s' % ret['response'])
                 raise FreeNASApiError('Unexpected error', msg)
         except Exception as e:
-            if(not isinstance(e, exception.VolumeIsBusy)): raise FreeNASApiError('Unexpected error', e)
+            if not isinstance(e, exception.VolumeIsBusy):
+                raise FreeNASApiError('Unexpected error', e)
 
     def _create_volume_from_snapshot(self, name, snapshot_name,
                                      snap_zvol_name):
