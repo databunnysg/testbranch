@@ -340,8 +340,7 @@ class TrueNASCommon(object):
             temp, snapvol = fullvolume.rsplit('/', 1)
             self._delete_snapshot(snapname, snapvol)
 
-        # When deleting volume with dependent snapsnot clone,
-        # 422 error triggered. Throw VolumeIsBus exception ensures
+        # When deleting volume with dependent snapsnot clone, 422 error triggered. Throw VolumeIsBus exception ensures
         # upper stream cinder manager mark volume status available instead of error-deleting.
         if ret['status'] == 'error' and ret['response'] == '422:Unprocessable Entity':
             errorexception = exception.VolumeIsBusy(
