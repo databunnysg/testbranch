@@ -345,8 +345,7 @@ class TrueNASCommon(object):
         # upper stream cinder manager mark volume status available instead of error-deleting.
         if ret['status'] == 'error' and ret['response'] == '422:Unprocessable Entity':
             errorexception = exception.VolumeIsBusy(
-                _("Cannot delete volume when clone child volume or snapshot exists!")
-                , volume_name=name)
+                _("Cannot delete volume when clone child volume or snapshot exists!"), volume_name=name)
             raise errorexception
         elif ret['status'] != FreeNASServer.STATUS_OK:
             msg = ('Error while deleting volume: %s' % ret['response'])
