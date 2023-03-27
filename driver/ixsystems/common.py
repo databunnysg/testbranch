@@ -386,7 +386,8 @@ class TrueNASCommon(object):
                                              request_urn, None)
             LOG.debug('_delete_snapshot select response : %s', json.dumps(ret))
             if ret['status'] == 'error' and ret['code'] == 404:
-                LOG.info("Attempting delete Cinder volume %s snapshot %s, however it cannot be found on TrueNAS"%(volume_name,name))
+                LOG.info("Attempting delete Cinder volume %s snapshot %s, however it cannot be found on TrueNAS"
+                         % (volume_name, name))
                 LOG.info("Assume TrueNAS admin delete it manually, proceeding with snapshot delete action on cinder side")
                 return
         except Exception as e:
