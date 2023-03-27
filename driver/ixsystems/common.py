@@ -340,9 +340,9 @@ class TrueNASCommon(object):
             temp, snapvol = fullvolume.rsplit('/', 1)
             self._delete_snapshot(snapname, snapvol)
 
-        # When deleting volume with dependent snapsnot clone, 422 error triggered. Throw VolumeIsBus exception ensures
+        # When deleting volume with dependent snapsnot clone, 422 error triggered. Throw VolumeIsBusy exception ensures
         # upper stream cinder manager mark volume status available instead of error-deleting.
-        if ret['status'] == 'error' and ret['response'] == '422:Unprocessable Entity':
+        if ret['status'] == 'error' and ret['code'] == 422:
             errorexception = exception.VolumeIsBusy(
                 _("Cannot delete volume when clone child volume or snapshot exists!"), volume_name=name)
             raise errorexception
@@ -382,14 +382,22 @@ class TrueNASCommon(object):
             name)
         LOG.debug('_delete_snapshot urn : %s', request_urn)
         try:
+            ret = self.handle.invoke_command(FreeNASServer.SELECT_COMMAND,
+                                             request_urn, None)
+            LOG.debug('_delete_snapshot select response : %s', json.dumps(ret))
+            if ret['status'] == 'error' and ret['code'] == 404:
+                LOG.info("Attempting delete Cinder volume %s snapshot %s, however it cannot be found on TrueNAS"%(volume_name,name))
+                LOG.info("Assume TrueNAS admin delete it manually, proceeding with snapshot delete action on cinder side")
+                return
+        except Exception as e:
+            raise FreeNASApiError('Unexpected error', e)
+        try:
             ret = self.handle.invoke_command(FreeNASServer.DELETE_COMMAND,
                                              request_urn, None)
-            LOG.debug('_delete_snapshot response : %s', json.dumps(ret))
-
-            # When deleting volume with dependent snapsnot clone, 422 error triggered. Throw VolumeIsBus exception ensures
+            LOG.debug('_delete_snapshot delete response : %s', json.dumps(ret))
+            # When deleting volume with dependent snapsnot clone, 422 error triggered. Throw VolumeIsBusy exception ensures
             # upper stream cinder manager mark volume status available instead of error-deleting.
-            if ret['status'] == 'error' and ret['response'] == '422:Unprocessable Entity':
-                print("volumeisbusy exeception raised")
+            if ret['status'] == 'error' and ret['code'] == 422:
                 errorexception = exception.VolumeIsBusy(
                     _("Cannot delete volume when clone child volume or snapshot exists!"), volume_name=name)
                 raise errorexception
