@@ -453,25 +453,29 @@ class TrueNASCommon(object):
                 raise FreeNASApiError('Unexpected error', msg)
         except Exception as e:
             raise FreeNASApiError('Unexpected error', e)
-  
+
     def _is_service_project(self, project_id):
         # Use keystone api to check project_id is service project
         # Return True if it is service project, otherwise return False
         grp = cfg.OptGroup('keystone_authtoken')
-        ops = [cfg.StrOpt('auth_url'),cfg.StrOpt('username'),cfg.StrOpt('password'),
-               cfg.StrOpt('project_name'),cfg.StrOpt('user_domain_name'),cfg.StrOpt('project_domain_name'),]
+        ops = [cfg.StrOpt('auth_url'), cfg.StrOpt('username'), cfg.StrOpt('password'),
+               cfg.StrOpt('project_name'), cfg.StrOpt('user_domain_name'), cfg.StrOpt('project_domain_name')]
         CONF.register_group(grp)
         CONF.register_opts(ops,group=grp)
         auth = v3.Password(auth_url=CONF.keystone_authtoken.auth_url, username=CONF.keystone_authtoken.username,
                              password=CONF.keystone_authtoken.password, project_id=project_id,
-                             user_domain_name=CONF.keystone_authtoken.user_domain_name,project_domain_name=CONF.keystone_authtoken.project_domain_name)
+                             user_domain_name=CONF.keystone_authtoken.user_domain_name,
+                             project_domain_name=CONF.keystone_authtoken.project_domain_name)
         sess = session.Session(auth=auth)
         keystone = client.Client(session=sess)
         try:
             project = keystone.projects.get(project_id)
-            if project.name == CONF.keystone_authtoken.project_name : return True
-        except Exception as e:
-            return False
+            if project.name == CONF.keystone_authtoken.project_name: return True
+        except Exception:
+            # Invalid project id will cause exeception from keystone client, 
+            # in this case it is allowed and normal, hence do nothing
+            pass
+        return False
 
     def _system_version(self):
         LOG.debug('_update_volume_stats start /system/version request')

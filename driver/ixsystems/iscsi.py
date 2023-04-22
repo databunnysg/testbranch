@@ -180,7 +180,8 @@ class FreeNASISCSIDriver(driver.ISCSIDriver):
             ctx.__setattr__("project_only", "True")
             vols = cinderapi.volume_get_all(ctx)
             attached_truenas_vol_count = len([vol for vol in vols
-                                              if vol.host and vol.host.find("@ixsystems-iscsi#") > 0 and vol.attach_status == 'attached'])
+                                              if vol.host and vol.host.find("@ixsystems-iscsi#") > 0
+                                              and vol.attach_status == 'attached'])
             if (attached_truenas_vol_count >= attach_max_allow):
                 LOG.error("Maximum lun/port limitation reached. Change kern.cam.ctl.max_luns and "
                           + "kern.cam.ctl.max_ports in tunable settings to allow more lun attachments.")
