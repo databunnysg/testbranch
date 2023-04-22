@@ -274,15 +274,15 @@ class FreeNASISCSIDriver(driver.ISCSIDriver):
                                         freenas_volume['name'])
 
         # Promote image cache volume created by cinder service account
-        # by checking project_id is cinder service project and display name match 
+        # by checking project_id is cinder service project and display name match
         # image-[a-z0-9]+ pattern
-        # This is required because image cache volume cloned from the snapshot of first volume 
+        # This is required because image cache volume cloned from the snapshot of first volume
         # provisioned by this image from upstream cinder flow code
         # Without promoting image cache volume, the first volume created can no longer be deleted
-        if self.configuration.safe_get('image_volume_cache_enabled') \
-            and self.common._is_service_project(volume['project_id']) \
-            and re.match(r"image-[a-zA-Z0-9]+-[a-z0-9]+-[a-z0-9]+-[a-z0-9]+-[a-z0-9]+", \
-                volume['display_name']):
+        if (self.configuration.safe_get('image_volume_cache_enabled') 
+            and self.common._is_service_project(volume['project_id']) 
+            and re.match(r"image-[a-zA-Z0-9]+-[a-z0-9]+-[a-z0-9]+-[a-z0-9]+-[a-z0-9]+",
+                         volume['display_name'])):
             self.common._promote_volume(freenas_volume['name'])
 
     def get_volume_stats(self, refresh=False):
