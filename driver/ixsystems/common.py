@@ -472,7 +472,8 @@ class TrueNASCommon(object):
         keystone = client.Client(session=sess)
         try:
             project = keystone.projects.get(project_id)
-            if project.name == CONF.keystone_authtoken.project_name: return True
+            if project.name == CONF.keystone_authtoken.project_name:
+                return True
         except Exception:
             # Invalid project id will cause exeception from keystone client,
             # in this case it is allowed and normal, hence do nothing
