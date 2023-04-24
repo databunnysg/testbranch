@@ -449,7 +449,7 @@ class TrueNASCommon(object):
             ret = self.handle.invoke_command(FreeNASServer.CREATE_COMMAND,
                                              request_urn, None)
             if ret['status'] != FreeNASServer.STATUS_OK:
-                msg = ('Error while creating snapshot: %s' % ret['response'])
+                msg = ('Error while promoting volume: %s' % ret['response'])
                 raise FreeNASApiError('Unexpected error', msg)
         except Exception as e:
             raise FreeNASApiError('Unexpected error', e)
